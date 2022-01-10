@@ -8,5 +8,6 @@ interface MovieContract {
         fun showErrorView()
         fun showLoadingView()
         fun hideLoadingView()
+        fun openSingleItemView(title: String)
     }
 }

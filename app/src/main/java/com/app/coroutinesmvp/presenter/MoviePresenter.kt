@@ -4,6 +4,8 @@ import com.app.coroutinesmvp.MovieContract
 import com.app.coroutinesmvp.deps.MovieActivityScope
 import com.app.coroutinesmvp.model.MovieModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -17,8 +19,10 @@ class MoviePresenter @Inject constructor(
     private val scope: CoroutineScope,
     private val movieModel: MovieModel
 ) {
+    internal val onClickStateFlow = MutableStateFlow<String?>(null)
     fun onAttach() {
         callMoviesApi()
+        observeOnClickStateFlow()
     }
 
     internal fun callMoviesApi() {
@@ -36,5 +40,15 @@ class MoviePresenter @Inject constructor(
                 movieView.hideLoadingView()
             }
             .launchIn(scope)
+    }
+
+    internal fun observeOnClickStateFlow() {
+        onClickStateFlow.asStateFlow()
+            .onEach {
+                it?.let {
+                    movieView.openSingleItemView(it)
+                }
+            }
+            .catch { }.launchIn(scope)
     }
 }

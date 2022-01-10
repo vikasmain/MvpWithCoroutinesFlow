@@ -3,6 +3,7 @@ package com.app.coroutinesmvp.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.coroutinesmvp.MovieContract
 import com.app.coroutinesmvp.data.MovieListResponse
@@ -51,5 +52,9 @@ class MovieActivity : AppCompatActivity(), MovieContract.MovieView {
 
     override fun hideLoadingView() {
         activityMainBinding.loadingView.root.visibility = View.GONE
+    }
+
+    override fun openSingleItemView(title: String) {
+        Toast.makeText(this, title, Toast.LENGTH_SHORT).show()
     }
 }

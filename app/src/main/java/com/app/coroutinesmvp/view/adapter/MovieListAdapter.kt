@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
+import com.app.coroutinesmvp.MovieStateFlow
 import com.app.coroutinesmvp.data.MovieListResponse
 import com.app.coroutinesmvp.databinding.MovieItemBinding
 import com.app.coroutinesmvp.deps.BASEURL
 import com.bumptech.glide.Glide
 
-class MovieListAdapter(private val context: Context) : RecyclerView.Adapter<MovieItemsViewHolder>() {
+class MovieListAdapter(private val context: Context) :
+    RecyclerView.Adapter<MovieItemsViewHolder>() {
     private val moviesList = mutableListOf<MovieListResponse.MovieListResult>()
     internal fun updateMovieItemsList(itemsResponse: List<MovieListResponse.MovieListResult>) {
         moviesList.clear()
@@ -46,7 +48,7 @@ class MovieItemsViewHolder(@NonNull val binding: MovieItemBinding) :
             description.text = movieListResponse.overview
             "Rating: ${movieListResponse.voteAverage}".also { rating.text = it }
             itemView.setOnClickListener {
-                Toast.makeText(context, movieListResponse.title, Toast.LENGTH_SHORT).show()
+                MovieStateFlow.onClickStateFlow.value = movieListResponse.title
             }
         }
     }
