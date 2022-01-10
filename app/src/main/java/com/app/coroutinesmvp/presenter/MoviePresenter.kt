@@ -21,12 +21,20 @@ class MoviePresenter @Inject constructor(
         callMoviesApi()
     }
 
-    fun callMoviesApi() {
+    internal fun callMoviesApi() {
         movieModel.callMoviesApi()
-            .onStart { }
-            .catch { }
-            .onEach { }
-            .onCompletion { }
+            .onStart {
+                movieView.showLoadingView()
+            }
+            .catch {
+                movieView.showErrorView()
+            }
+            .onEach {
+                movieView.showMoviesList(it)
+            }
+            .onCompletion {
+                movieView.hideLoadingView()
+            }
             .launchIn(scope)
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CoRoutinesMvp</string>
+    <string name="error_view">Error View</string>
 </resources>
