@@ -1,6 +1,8 @@
 package com.app.coroutinesmvp.presenter
 
+import android.util.Log
 import com.app.coroutinesmvp.MovieContract
+import com.app.coroutinesmvp.MovieStateFlow
 import com.app.coroutinesmvp.deps.MovieActivityScope
 import com.app.coroutinesmvp.model.MovieModel
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +21,6 @@ class MoviePresenter @Inject constructor(
     private val scope: CoroutineScope,
     private val movieModel: MovieModel
 ) {
-    internal val onClickStateFlow = MutableStateFlow<String?>(null)
     fun onAttach() {
         callMoviesApi()
         observeOnClickStateFlow()
@@ -43,12 +44,14 @@ class MoviePresenter @Inject constructor(
     }
 
     internal fun observeOnClickStateFlow() {
-        onClickStateFlow.asStateFlow()
+        MovieStateFlow.onClickStateFlow.asStateFlow()
             .onEach {
                 it?.let {
                     movieView.openSingleItemView(it)
                 }
             }
-            .catch { }.launchIn(scope)
+            .catch {
+                Log.e("MovieActivity", "Error while observing stateflow$it")
+            }.launchIn(scope)
     }
 }
