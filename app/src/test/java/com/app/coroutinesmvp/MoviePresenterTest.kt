@@ -1,6 +1,5 @@
 package com.app.coroutinesmvp
 
-import androidx.annotation.DisplayContext
 import com.app.coroutinesmvp.model.MovieModel
 import com.app.coroutinesmvp.presenter.MoviePresenter
 import com.nhaarman.mockitokotlin2.mock
@@ -11,8 +10,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.plus
 import org.junit.Before
-import org.junit.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -21,12 +20,8 @@ class MoviePresenterTest {
     private val view = mock<MovieContract.MovieView>()
     private val scope = MainScope() + Dispatchers.Unconfined
     private val movieModel = mock<MovieModel>()
-    lateinit var moviePresenter: MoviePresenter
-
-    @Before
-    fun setup() {
-        moviePresenter = MoviePresenter(movieModel = movieModel, scope = scope, movieView = view)
-    }
+    private val moviePresenter =
+        MoviePresenter(movieModel = movieModel, scope = scope, movieView = view)
 
     @DisplayName("when movie list api succeeds then show movie list in recyclerview")
     @Test
@@ -49,5 +44,13 @@ class MoviePresenterTest {
         verify(view).showLoadingView()
         verify(view).showErrorView()
         verify(view).hideLoadingView()
+    }
+
+    @DisplayName("test on click listener for movie item")
+    @Test
+    fun testOnclickListener() {
+        MovieStateFlow.onClickStateFlow.value = "Spider man"
+        moviePresenter.observeOnClickStateFlow()
+        verify(view).openSingleItemView("Spider man")
     }
 }
